@@ -1,0 +1,15 @@
+spring:
+  mvc:
+    problemdetails:
+      enabled: false
+  application:
+    name: PayFlash
+  datasource:
+    url: jdbc:postgresql://localhost:5432/flashpay
+    username: postgres
+    password: admin
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: true
