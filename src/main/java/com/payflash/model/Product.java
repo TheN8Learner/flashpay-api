@@ -4,13 +4,21 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @NotBlank(message = "The name cant be empty")
     private String name;
     @PositiveOrZero(message = "The price cant be negative")
@@ -23,24 +31,7 @@ public class Product {
         this.available = false;
     }
 
-    public Product() {}
-
-    public Long getId(){return  id;}
-    public  String getName(){return  name;}
-    public void setName(String name){
-        this.name = name;
-    }
-    public double getPrice(){return price;}
-    public void setPrice(double price){
-        this.price = price;
-    }
-    public boolean isAvailable(){return  available;}
-    public void setAvailable(boolean available){
+    public void isAvailable(boolean available){
         this.available = available;
-    }
-
-    @Override
-    public String toString() {
-        return "Product{id=" + id + ", Name=" + name + ", price=" + price + "}";
     }
 }
