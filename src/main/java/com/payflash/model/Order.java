@@ -3,10 +3,21 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Setter
+@Getter
+@NoArgsConstructor
+@ToString
 @Entity
 @Table(name="orders")
 public class Order{
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,27 +27,14 @@ public class Order{
     private Double totalAmount;
     private boolean paid;
 
-    public Order() {}
 
     public Order(double totalAmount){
         this.totalAmount = totalAmount;
         this.paid = false;
     }
 
-    public Long getId(){ return id;}
-    public double getTotalAmount(){ return totalAmount;}
-    public  void setTotalAmount(double totalAmount){
-        this.totalAmount = totalAmount;
-    }
-    public boolean isPaid(){ return  paid;}
-
-    public void markAsPaid(){
+    public void markAsPaid() {
         this.paid = true;
-    }
-
-    @Override
-    public String toString() {
-        return "Order{id=" + id + ", totalAmount=" + totalAmount + ", paid=" + paid + "}";
     }
 }
 
