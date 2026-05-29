@@ -1,4 +1,6 @@
 package com.payflash.controller;
+import com.payflash.dto.OrderRequestDto;
+import com.payflash.dto.OrderResponseDto;
 import com.payflash.service.OrderService;
 
 import jakarta.validation.Valid;
@@ -19,33 +21,33 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<Order> getAllOrders() {
+    public List<OrderResponseDto> getAllOrders() {
         return orderService.getOrders();
     }
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(@Valid @RequestBody Order order){
-        Order created = orderService.createOrder(order.getTotalAmount());
+    public ResponseEntity<OrderResponseDto> createOrder(@Valid @RequestBody OrderRequestDto requestDto){
+        OrderResponseDto created = orderService.createOrder(requestDto);
         return ResponseEntity.status(201).body(created);
     }
 
     //Ceci est un commentaire
     @GetMapping("/{id}")
-    public ResponseEntity<Order> getOrder(@PathVariable Long id){
-        Order order =  orderService.getOrderById(id);
+    public ResponseEntity<OrderResponseDto> getOrder(@PathVariable Long id ){
+        OrderResponseDto order =  orderService.getOrderById(id);
         return ResponseEntity.ok(order);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Order> modifyOrder(@RequestBody Order order ,@PathVariable Long id){
-        Order theorder = orderService.modifyOrder(id, order.getTotalAmount());
-        return  ResponseEntity.ok(theorder);
+    public ResponseEntity<OrderResponseDto> modifyOrder(@RequestBody OrderRequestDto requestDto ,@PathVariable Long id){
+        OrderResponseDto order = orderService.modifyOrder(id, requestDto);
+        return  ResponseEntity.ok(order);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<List<Order>> deleteOrder(@PathVariable Long id){
+    public ResponseEntity<Void> deleteOrder(@PathVariable Long id){
         orderService.deleteOrder(id);
-        return  ResponseEntity.noContent().build();
+        return null;
     }
 }
 
