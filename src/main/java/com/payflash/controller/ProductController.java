@@ -1,5 +1,7 @@
 package com.payflash.controller;
 
+import com.payflash.dto.ProductRequestDto;
+import com.payflash.dto.ProductResponseDto;
 import com.payflash.model.Product;
 import com.payflash.service.ProductService;
 import jakarta.validation.Valid;
@@ -18,19 +20,19 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getProducts(){
+    public List<ProductResponseDto> getProducts(){
         return productService.getProducts();
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product){
-        Product created = productService.createProduct(product.getName(), product.getPrice());
+    public ResponseEntity<ProductResponseDto> createProduct(@Valid @RequestBody ProductRequestDto productRequestDto){
+        ProductResponseDto created = productService.createProduct(productRequestDto);
         return  ResponseEntity.status(201).body(created);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable Long id){
-        Product product = productService.getProduct(id);
+    public ResponseEntity<ProductResponseDto> getProduct(@PathVariable Long id){
+        ProductResponseDto product = productService.getProduct(id);
         return ResponseEntity.ok(product);
     }
 
@@ -41,8 +43,8 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public Product modifyProduct(@PathVariable Long id, @RequestBody Product product){
-        productService.modifyProduct(id, product.getName(), product.getPrice(), product.isAvailable());
-        return ResponseEntity.ok(product).getBody();
+    public ProductResponseDto modifyProduct(@PathVariable Long id, @RequestBody ProductRequestDto productRequestDto){
+        ProductResponseDto productResponseDto = productService.modifyProduct(id, productRequestDto);
+        return ResponseEntity.ok(productResponseDto).getBody();
     }
 }
