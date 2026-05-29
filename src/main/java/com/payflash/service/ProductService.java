@@ -1,10 +1,13 @@
 package com.payflash.service;
 
+import com.payflash.dto.ProductRequestDto;
+import com.payflash.dto.ProductResponseDto;
 import com.payflash.exception.ProductNotFoundException;
 import com.payflash.model.Product;
 import com.payflash.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,19 +19,27 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getProducts(){
-        return productRepository.findAll();
+    public List<ProductResponseDto> getProducts(){
+        List<Product> products = productRepository.findAll();
+        List<ProductResponseDto> productResponseDtos = new ArrayList<>();
+        for(Product product: products){
+            productResponseDtos.add(
+                    new ProductResponseDto(product.getId(), product.getName(), product.getPrice(), product.isAvailable()));
+        }
+        return productResponseDtos;
     }
 
-    public Product createProduct(String name, double Price){
-        Product product = new Product(name, Price);
-        return productRepository.save(product);
+    public ProductResponseDto createProduct(ProductRequestDto productRequestDto){
+        Product product = new Product(productRequestDto.getName(), productRequestDto.getPrice());
+        Product saved = productRepository.save(product);
+        return new ProductResponseDto(saved.getId(), saved.getName(), saved.getPrice(), saved.isAvailable());
     }
 
-    public Product getProduct(Long id){
-        return productRepository.findById(id).orElseThrow(
+    public ProductResponseDto getProduct(Long id){
+        Product product = productRepository.findById(id).orElseThrow(
                 () -> new ProductNotFoundException(id)
-        );}
+        );
+        return new ProductResponseDto(product.getId(), product.getName(), product.getPrice(), product.isAvailable());}
 
     public void deleteProduct(Long id){
         Product product = productRepository.findById(id).orElseThrow(
@@ -37,13 +48,14 @@ public class ProductService {
         productRepository.delete(product);
     }
 
-    public Product modifyProduct(Long id, String name, double price, boolean available){
+    public ProductResponseDto modifyProduct(Long id, ProductRequestDto productRequestDto){
         Product product = productRepository.findById(id).orElseThrow(
                 () -> new ProductNotFoundException(id)
         );
-        product.setName(name);
-        product.setPrice(price);
-        product.setAvailable(available);
-        return  productRepository.save(product);
+        product.setName(productRequestDto.getName());
+        product.setPrice(productRequestDto.getPrice());
+        product.setAvailable(productRequestDto.isAvailable());
+        Product saved = productRepository.save(product);
+        return new ProductResponseDto(saved.getId(), saved.getName(), saved.getPrice(), saved.isAvailable()) ;
     }
 }
