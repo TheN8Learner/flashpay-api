@@ -34,4 +34,9 @@ public class GlobalExceptionHandler {
         return  ResponseEntity.status(400).body(errors);
     }
 
+    @ExceptionHandler(CustomerNotFoundException.class)
+    public ResponseEntity<String> handleCustomerNotFound(CustomerNotFoundException e){
+        return ResponseEntity.status(404).body(e.getMessage());
+    }
+
 }
