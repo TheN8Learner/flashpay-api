@@ -5,6 +5,8 @@ import com.payflash.dto.ProductResponseDto;
 import com.payflash.exception.ProductNotFoundException;
 import com.payflash.model.Product;
 import com.payflash.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,14 +21,13 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductResponseDto> getProducts(){
-        List<Product> products = productRepository.findAll();
-        List<ProductResponseDto> productResponseDtos = new ArrayList<>();
-        for(Product product: products){
-            productResponseDtos.add(
-                    new ProductResponseDto(product.getId(), product.getName(), product.getPrice(), product.isAvailable()));
-        }
-        return productResponseDtos;
+    public Page<ProductResponseDto> getProducts(Pageable pageable){
+        return productRepository.findAll(pageable)
+                .map(product -> new ProductResponseDto(
+                        product.getId(),
+                        product.getName(),
+                        product.getPrice(),
+                        product.isAvailable()));
     }
 
     public ProductResponseDto createProduct(ProductRequestDto productRequestDto){
