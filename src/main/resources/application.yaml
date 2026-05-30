@@ -13,3 +13,8 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+application:
+  security:
+    jwt-secret: flashpay-secret-key-must-be-long-enough-256-bits
+    jwt-expiration: 86400000
