@@ -4,6 +4,9 @@ import com.payflash.dto.OrderResponseDto;
 import com.payflash.service.OrderService;
 
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +24,12 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<OrderResponseDto> getAllOrders() {
-        return orderService.getOrders();
+    public ResponseEntity<Page<OrderResponseDto>> getAllOrders(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(orderService.getOrders(pageable));
     }
-
     @PostMapping
     public ResponseEntity<OrderResponseDto> createOrder(@Valid @RequestBody OrderRequestDto requestDto){
         OrderResponseDto created = orderService.createOrder(requestDto);
