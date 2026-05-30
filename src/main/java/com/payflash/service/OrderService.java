@@ -7,6 +7,8 @@ import com.payflash.model.Customer;
 import com.payflash.model.Order;
 import com.payflash.repository.CustomerRepository;
 import com.payflash.repository.OrderRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,14 +26,14 @@ public class OrderService {
         this.customerRepository = customerRepository;
     }
 
-    public List<OrderResponseDto> getOrders(){
-        List<Order> orders = orderRepository.findAll();
-        List<OrderResponseDto> orderResponseDtos = new ArrayList<>();
-        for(Order order : orders){
-            orderResponseDtos.add(new OrderResponseDto(order.getId(), order.getTotalAmount(), order.isPaid(), order.getCustomer().getId()));
-        }
-        return orderResponseDtos;
-    }
+    public Page<OrderResponseDto> getOrders(Pageable pageable){
+        return orderRepository.findAll(pageable)
+                .map(order -> new OrderResponseDto(
+                        order.getId(),
+                        order.getTotalAmount(),
+                        order.isPaid(),
+                        order.getCustomer() != null ? order.getCustomer().getId() : null
+                ));    }
 
     public OrderResponseDto getOrderById(Long id) {
         Order order = orderRepository.findById(id)
