@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_DB: flashpay
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
 
@@ -16,7 +16,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/flashpay
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: admin
-      APPLICATION_SECURITY_JWT-SECRET: flashpay-secret-key-must-be-long-enough-256-bits
+      APPLICATION_SECURITY_JWT-SECRET: ${JWT_SECRET}
       APPLICATION_SECURITY_JWT-EXPIRATION: 86400000
     depends_on:
       - postgres
